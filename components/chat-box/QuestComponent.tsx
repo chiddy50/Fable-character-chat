@@ -279,7 +279,7 @@ const QuestComponent: React.FC<Props> = ({
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild>
                         <Button
-                            className="w-full"
+                            className="w-full bg-indigo-700 text-white"
                             onClick={() => {
                                 setError("");
                                 setSelectedQuest(null);

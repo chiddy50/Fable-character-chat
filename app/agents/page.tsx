@@ -30,7 +30,7 @@ const AgentsPage = () => {
     }
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-start mt-10" style={{ fontFamily: 'Tahoma, Geneva, Verdana, sans-serif' }}>
+        <div className="min-h-screen flex px-4 flex-col items-center justify-start mt-10" style={{ fontFamily: 'Tahoma, Geneva, Verdana, sans-serif' }}>
             
             {/* AIM-style header */}
             <div className="w-full max-w-md bg-blue-700 text-white text-lg font-bold py-3 px-4 rounded-t shadow flex items-center justify-between">

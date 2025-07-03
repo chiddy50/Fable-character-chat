@@ -437,9 +437,9 @@ const AgentChatPage = () => {
     }
 
     return (
-        <div>
+        <div className="px-4">
             {/* Back button */}
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-5 mb-5">
                 <button
                     className="mb-4 mt-4 ml-4 flex items-center gap-1 text-white hover:underline text-sm font-bold px-2 py-1 rounded transition-colors"
                     onClick={() => router.push("/agents")}
@@ -467,7 +467,7 @@ const AgentChatPage = () => {
 
             {/* Main content */}
             <div
-                className="flex flex-col md:flex-row max-w-4xl mx-auto p-4 gap-4"
+                className="flex flex-col md:flex-row max-w-4xl mx-auto py-4 gap-4"
                 style={{ fontFamily: 'Tahoma, Geneva, Verdana, sans-serif' }}
             >
                 {/* Chat section */}
