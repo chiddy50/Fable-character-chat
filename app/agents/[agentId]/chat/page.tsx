@@ -19,6 +19,7 @@ import QuestComponent from "@/components/chat-box/QuestComponent";
 // import VictoryList from "@/components/chat-box/VictoryList";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { characterReactions } from "@/data/characterReactions";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://agents-api.doodles.app";
 const API_HEADERS = {
@@ -150,36 +151,6 @@ const AgentChatPage = () => {
     }, [agentId]);
 
 
-
-    // useEffect(() => {
-    //     if (questState?.status === 'success') {
-    //         const victory: Victory = {
-    //             id: uuidv4(),
-    //             agentId: questState.agentId,
-    //             agentName: currentAgent?.name || '',
-    //             questId: questState.questId,
-    //             questName: questState.quest,
-    //             attempts: questState.attempts,
-    //             completedAt: new Date().toISOString(),
-    //             badge: questState.badge || 'bronze'
-    //         };
-
-    //         const existing = JSON.parse(localStorage.getItem('victories') || '[]');
-    //         const alreadyExists = existing.some((v: any) =>
-    //             v.agentId === victory.agentId &&
-    //             v.questId === victory.questId &&
-    //             v.completedAt === victory.completedAt
-    //         );
-
-    //         if (!alreadyExists) {
-    //             const updated = [...existing, victory];
-    //             localStorage.setItem('victories', JSON.stringify(updated));
-    //         }
-    //     }
-    // }, [questState?.status]);
-
-
-
     /**
      * Sort memories by creation date
      */
@@ -238,6 +209,7 @@ const AgentChatPage = () => {
 
                 // Only update quest if emotion changed
                 if (newEmotion && newEmotion !== currentEmotion) {
+                    // characterReactions
                     setQuestState(prev => {
                         if (!prev || prev.status !== 'active') return prev;
 
@@ -245,7 +217,8 @@ const AgentChatPage = () => {
 
                         let status: 'active' | 'success' | 'failed' = 'active';
 
-                        if (newEmotion.toLowerCase() === prev.emotionTarget.toLowerCase()) {
+                        // if (newEmotion.toLowerCase() === prev.emotionTarget.toLowerCase()) {
+                        if(validateTarget(newEmotion.toLowerCase(), prev.emotionTarget.toLowerCase())){
                             status = 'success';
                         } else if (attempts >= prev.number_of_attempts) {
                             status = 'failed';
@@ -433,6 +406,19 @@ const AgentChatPage = () => {
         }
     }, [messages, currentPage, scrollToBottom]);
 
+    const validateTarget = (newEmotion: string, target: string) => {
+        let targetAchieved = false; 
+
+        targetAchieved = characterReactions.some(reaction => 
+            reaction.emojis.some(emoji => 
+                emoji.name.toLowerCase() === newEmotion.toLowerCase() && 
+                reaction.category.toLowerCase() === target.toLowerCase()
+            )
+        );
+        
+        return targetAchieved;
+    }
+
     // Loading states
     if (agentLoading) {
         return (
@@ -462,6 +448,8 @@ const AgentChatPage = () => {
                     <ArrowLeft size={17} />
                     Back
                 </button>
+
+                {/* <Button onClick={validateTarget}>Test</Button> */}
 
                 <Link href="/">
                     <Button >

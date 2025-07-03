@@ -39,7 +39,8 @@ export const ChatSummary: React.FC<ChatSummaryProps> = ({ chatSummary, loadingSu
       </div>
 
       <div className="text-gray-700 mt-5">
-        <h1 className="font-extrabold text-sm">{currentAgent?.name ?? chatSummary?.agentName} is {chatSummary?.currentEmotion}</h1>
+        <h1 className="font-extrabold text-sm">Emotion: {chatSummary?.currentEmotion}</h1>
+        {/* <h1 className="font-extrabold text-sm">{currentAgent?.name ?? chatSummary?.agentName} is {chatSummary?.currentEmotion}</h1> */}
         <span className='capitalize text-7xl text0ce'>
           {/* {chatSummary.agentName} is {chatSummary.currentEmotion}  */}
           {findReactionSymbolByName(chatSummary?.currentEmotion)}

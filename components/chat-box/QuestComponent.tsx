@@ -68,15 +68,8 @@ const quests: Quest[] = [
     },
     {
         id: "3",
-        quest: "Make the character laugh",
-        target: "laugh",
-        number_of_attempts: 5,
-        badge: 'bronze'
-    },
-    {
-        id: "4",
-        quest: "Make the character express rage",
-        target: "rage",
+        quest: "Make the character feel fear",
+        target: "fear",
         number_of_attempts: 5,
         badge: 'gold'
     },
@@ -87,13 +80,39 @@ const quests: Quest[] = [
         number_of_attempts: 5,
         badge: 'silver'
     },
+    
     {
         id: "6",
-        quest: "Make the character unamused",
-        target: "unamused",
+        quest: "Ensure the character starts thinking",
+        target: "thinking",
         number_of_attempts: 5,
         badge: 'silver'
-    }
+    },
+    {
+        id: "7",
+        quest: "Make the character feel embarrassed",
+        target: "embarrassed",
+        number_of_attempts: 5,
+        badge: 'gold'
+    },
+    {
+        id: "8",
+        quest: "Make the character feel sleepy",
+        target: "sleepy",
+        number_of_attempts: 5,
+        badge: 'gold'
+    },
+    {
+        id: "9",
+        quest: "Make the character feel love/affection",
+        target: "love/affection",
+        number_of_attempts: 5,
+        badge: 'gold'
+    },
+
+    
+
+    
 ];
 
 interface Props {
