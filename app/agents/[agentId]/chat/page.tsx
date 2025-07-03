@@ -139,7 +139,7 @@ const AgentChatPage = () => {
 
             return { memories: data.memories };
         },
-        enabled: !!agentId,
+        enabled: !!agentId && messages.length < 1,
     });
 
     useEffect(() => {
@@ -264,6 +264,8 @@ const AgentChatPage = () => {
             console.error('Error generating chat summary:', error);
         } finally {
             setLoadingSummary(false);
+            scrollToBottom();
+
         }
     };
     /**
@@ -271,6 +273,7 @@ const AgentChatPage = () => {
      */
     const sendMessage = async () => {
         if (!input.trim() || !agentId || loading) return;
+        scrollToBottom();
 
         setLoading(true);
         const userMessage: Message = { text: input.trim(), user: "user" };
