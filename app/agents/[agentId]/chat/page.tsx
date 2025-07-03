@@ -21,7 +21,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { characterReactions } from "@/data/characterReactions";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://agents-api.doodles.app";
+const API_BASE_URL = process.env.NEXT_PUBLIC_APP_URL;
 const API_HEADERS = {
     "Content-Type": "application/json",
     "x-mini-app-id": process.env.NEXT_PUBLIC_APP_ID,

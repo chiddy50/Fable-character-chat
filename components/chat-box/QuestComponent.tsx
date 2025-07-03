@@ -246,7 +246,7 @@ const QuestComponent: React.FC<Props> = ({
     }
 
     return (
-        <div className='bg-white text-black mb-3 p-3 max-w-md mx-auto rounded-lg shadow-sm border'>
+        <div className=' mb-3 max-w-md mx-auto rounded-lg shadow-sm border'>
             {/* Quest Status Display */}
             {questState && (
                 <div className={`mb-3 p-2 rounded-lg border ${questState.status === 'active' ? 'bg-blue-50 border-blue-200' :
