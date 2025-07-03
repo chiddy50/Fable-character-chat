@@ -16,6 +16,7 @@ NEXT_PUBLIC_APP_URL="https://agents-api.doodles.app"
 
 ```bash
 
+# Install dependencies
 npm install
 # or
 yarn install
@@ -25,8 +26,7 @@ pnpm install
 bun install
 
 
-
-
+# Starting the local server
 npm run dev
 # or
 yarn dev
