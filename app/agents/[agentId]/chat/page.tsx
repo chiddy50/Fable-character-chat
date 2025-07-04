@@ -441,7 +441,7 @@ const AgentChatPage = () => {
             {/* Back button */}
             <div className="flex items-center gap-5 mb-5">
                 <button
-                    className="mb-4 mt-4 ml-4 flex items-center gap-1 text-white hover:underline text-sm font-bold px-2 py-1 rounded transition-colors"
+                    className="mb-4 mt-4 ml-4 flex items-center gap-1  hover:underline text-sm font-bold px-2 py-1 rounded transition-colors"
                     onClick={() => router.push("/agents")}
                     type="button"
                 >

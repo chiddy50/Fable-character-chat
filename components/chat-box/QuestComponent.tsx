@@ -11,6 +11,29 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Progress } from "@/components/ui/progress"
+import {
+    Trophy,
+    Target,
+    Zap,
+    Crown,
+    Award,
+    Play,
+    RotateCcw,
+    CheckCircle,
+    XCircle,
+    Clock,
+    Heart,
+    Smile,
+    Frown,
+    Angry,
+    Eye,
+    Brain,
+    Bed,
+    Sparkles
+} from 'lucide-react'
 import { v4 as uuidv4 } from 'uuid';
 
 interface Agent {
@@ -24,7 +47,9 @@ interface Quest {
     quest: string;
     target: string;
     number_of_attempts: number;
-    badge: 'gold' | 'silver' | 'bronze'; // Added badge type
+    badge: 'gold' | 'silver' | 'bronze';
+    icon?: React.ReactNode;
+    difficulty: 'easy' | 'medium' | 'hard';
 }
 
 interface ActiveQuest {
@@ -37,7 +62,7 @@ interface ActiveQuest {
     number_of_attempts: number;
     status: 'active' | 'success' | 'failed';
     createdAt: string;
-    badge?: 'gold' | 'silver' | 'bronze'; // Added badge to active quest
+    badge?: 'gold' | 'silver' | 'bronze';
 }
 
 interface Victory {
@@ -51,68 +76,90 @@ interface Victory {
     badge: 'gold' | 'silver' | 'bronze';
 }
 
+const emotionIcons = {
+    happy: <Smile className="w-4 h-4" />,
+    sad: <Frown className="w-4 h-4" />,
+    fear: <Eye className="w-4 h-4" />,
+    angry: <Angry className="w-4 h-4" />,
+    thinking: <Brain className="w-4 h-4" />,
+    embarrassed: <Sparkles className="w-4 h-4" />,
+    sleepy: <Bed className="w-4 h-4" />,
+    'love/affection': <Heart className="w-4 h-4" />,
+}
+
 const quests: Quest[] = [
     {
         id: "1",
         quest: "Make the character happy",
         target: "happy",
         number_of_attempts: 5,
-        badge: 'gold'
+        badge: 'gold',
+        icon: emotionIcons.happy,
+        difficulty: 'easy'
     },
     {
         id: "2",
         quest: "Make the character sad",
         target: "sad",
         number_of_attempts: 5,
-        badge: 'silver'
+        badge: 'silver',
+        icon: emotionIcons.sad,
+        difficulty: 'medium'
     },
     {
         id: "3",
         quest: "Make the character feel fear",
         target: "fear",
         number_of_attempts: 5,
-        badge: 'gold'
+        badge: 'gold',
+        icon: emotionIcons.fear,
+        difficulty: 'hard'
     },
     {
         id: "5",
         quest: "Make the character angry",
         target: "angry",
         number_of_attempts: 5,
-        badge: 'silver'
+        badge: 'silver',
+        icon: emotionIcons.angry,
+        difficulty: 'medium'
     },
-    
     {
         id: "6",
         quest: "Ensure the character starts thinking",
         target: "thinking",
         number_of_attempts: 5,
-        badge: 'silver'
+        badge: 'silver',
+        icon: emotionIcons.thinking,
+        difficulty: 'medium'
     },
     {
         id: "7",
         quest: "Make the character feel embarrassed",
         target: "embarrassed",
         number_of_attempts: 5,
-        badge: 'gold'
+        badge: 'gold',
+        icon: emotionIcons.embarrassed,
+        difficulty: 'hard'
     },
     {
         id: "8",
         quest: "Make the character feel sleepy",
         target: "sleepy",
         number_of_attempts: 5,
-        badge: 'gold'
+        badge: 'gold',
+        icon: emotionIcons.sleepy,
+        difficulty: 'hard'
     },
     {
         id: "9",
         quest: "Make the character feel love/affection",
         target: "love/affection",
         number_of_attempts: 5,
-        badge: 'gold'
+        badge: 'gold',
+        icon: emotionIcons['love/affection'],
+        difficulty: 'hard'
     },
-
-    
-
-    
 ];
 
 interface Props {
@@ -132,18 +179,12 @@ const QuestComponent: React.FC<Props> = ({
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
 
-    // Add this useEffect to track quest completion
     useEffect(() => {
         if (questState?.status === 'success') {
             recordVictory(questState);
         }
     }, [questState?.status]);
 
-
-
-
-    // Helper function to record victories
-    // Update the recordVictory function in QuestComponent.tsx
     const recordVictory = (quest: ActiveQuest) => {
         if (!currentAgent || quest.status !== 'success') return;
 
@@ -159,11 +200,9 @@ const QuestComponent: React.FC<Props> = ({
         };
 
         try {
-            // Get existing victories or initialize empty array
             const existingVictories = JSON.parse(localStorage.getItem('victories') || '[]');
             const victories = Array.isArray(existingVictories) ? existingVictories : [];
 
-            // Check if this victory already exists
             const alreadyRecorded = victories.some((v: Victory) =>
                 v.agentId === victory.agentId &&
                 v.questId === victory.questId &&
@@ -179,14 +218,12 @@ const QuestComponent: React.FC<Props> = ({
         }
     };
 
-    // Update the startQuest function to include the badge
     const startQuest = () => {
         if (!currentAgent?.id || !selectedQuest) {
             setError("No agent or quest selected");
             return;
         }
 
-        // Check for existing active quest
         if (questState && questState.status === 'active') {
             setError("You already have an active quest with this agent");
             return;
@@ -202,7 +239,7 @@ const QuestComponent: React.FC<Props> = ({
             number_of_attempts: selectedQuest.number_of_attempts,
             status: 'active',
             createdAt: new Date().toISOString(),
-            badge: selectedQuest.badge // Add this line to include the badge
+            badge: selectedQuest.badge
         };
 
         setQuestState(newQuest);
@@ -215,30 +252,35 @@ const QuestComponent: React.FC<Props> = ({
         setQuestState(null);
     };
 
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            // case 'active': return 'text-blue-600';
-            case 'active': return '';
-            case 'success': return 'text-green-600';
-            case 'failed': return 'text-red-600';
-            default: return 'text-gray-600';
+    const getBadgeColor = (badge: 'gold' | 'silver' | 'bronze') => {
+        switch (badge) {
+            case 'gold': return 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-white';
+            case 'silver': return 'bg-gradient-to-r from-gray-300 to-gray-500 text-gray-800';
+            case 'bronze': return 'bg-gradient-to-r from-amber-600 to-amber-800 text-white';
+            default: return 'bg-gray-500 text-white';
         }
     };
 
-    const getStatusMessage = () => {
-        if (!questState) return null;
+    const getDifficultyColor = (difficulty: 'easy' | 'medium' | 'hard') => {
+        switch (difficulty) {
+            case 'easy': return 'text-green-600 bg-green-50 border-green-200';
+            case 'medium': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+            case 'hard': return 'text-red-600 bg-red-50 border-red-200';
+            default: return 'text-gray-600 bg-gray-50 border-gray-200';
+        }
+    };
 
-        const remaining = questState.number_of_attempts - questState.attempts;
+    const getProgressPercentage = () => {
+        if (!questState) return 0;
+        return (questState.attempts / questState.number_of_attempts) * 100;
+    };
 
-        switch (questState.status) {
-            case 'active':
-                return `Active: ${remaining} attempts remaining to make them ${questState.emotionTarget}`;
-            case 'success':
-                return `Success! You made them ${questState.emotionTarget} in ${questState.attempts} attempts!`;
-            case 'failed':
-                return `Failed! You couldn't make them ${questState.emotionTarget} in ${questState.number_of_attempts} attempts.`;
-            default:
-                return null;
+    const getStatusIcon = (status: string) => {
+        switch (status) {
+            case 'active': return <Clock className="w-4 h-4" />;
+            case 'success': return <CheckCircle className="w-4 h-4" />;
+            case 'failed': return <XCircle className="w-4 h-4" />;
+            default: return null;
         }
     };
 
@@ -247,32 +289,95 @@ const QuestComponent: React.FC<Props> = ({
     }
 
     return (
-        <div className=' mb-3 max-w-md mx-auto rounded-lg shadow-sm border'>
-            {/* Quest Status Display */}
+        <div className="w-full max-w-md mx-auto mb-4 px-4 sm:px-0">
+            {/* Active Quest Display */}
             {questState && (
-                <div className={`mb-3 p-2 flex justify-center ${questState.status === 'active' ? 'bg-gray-600 ' :
-                    questState.status === 'success' ? 'bg-green-50 border-green-200' :
-                        'bg-red-50 border-red-200'
+                <Card className={`mb-4 transition-all duration-300 gap-2 ${questState.status === 'active'
+                        ? 'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 shadow-lg'
+                        : questState.status === 'success'
+                            ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 shadow-lg'
+                            : 'bg-gradient-to-br from-red-50 to-rose-50 border-red-200 shadow-lg'
                     }`}>
-                    <div className="flex justify-between items-start">
-                        <div>
-                            <h4 className="font-semibold text-sm">{questState.quest}</h4>
-                            <p className={`text-xs ${getStatusColor(questState.status)}`}>
-                                {getStatusMessage()}
-                            </p>
+                    <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                                {getStatusIcon(questState.status)}
+                                <CardTitle className="text-base pb-0 font-semibold">
+                                    {questState.quest}
+                                </CardTitle>
+                            </div>
+                            <Badge className={getBadgeColor(questState.badge || 'bronze')}>
+                                {questState.badge === 'gold' && <Crown className="w-3 h-3 mr-1" />}
+                                {questState.badge === 'silver' && <Award className="w-3 h-3 mr-1" />}
+                                {questState.badge === 'bronze' && <Trophy className="w-3 h-3 mr-1" />}
+                                {questState.badge?.toUpperCase()}
+                            </Badge>
                         </div>
-                        {questState.status !== 'active' && (
-                            <Button
-                                onClick={resetQuest}
-                                variant="outline"
-                                size="sm"
-                                className="text-xs"
-                            >
-                                New Quest
-                            </Button>
-                        )}
-                    </div>
-                </div>
+                    </CardHeader>
+
+                    <CardContent className="pt-0">
+                        <div className="space-y-3">
+                            <div className="flex items-center space-x-2 text-sm text-gray-600">
+                                <Target className="w-4 h-4" />
+                                <span>Target: {questState.emotionTarget}</span>
+                            </div>
+
+                            {questState.status === 'active' && (
+                                <div className="space-y-2">
+                                    <div className="flex justify-between text-sm">
+                                        <span>Progress</span>
+                                        <span className="font-medium">
+                                            {questState.attempts} / {questState.number_of_attempts}
+                                        </span>
+                                    </div>
+                                    <Progress
+                                        value={getProgressPercentage()}
+                                        className="h-2"
+                                    />
+                                    <p className="text-xs text-gray-500">
+                                        {questState.number_of_attempts - questState.attempts} attempts remaining
+                                    </p>
+                                </div>
+                            )}
+
+                            {questState.status === 'success' && (
+                                <div className="text-center py-2">
+                                    <div className="flex items-center justify-center space-x-2 text-green-600 mb-2">
+                                        <CheckCircle className="w-5 h-5" />
+                                        <span className="font-semibold">Quest Completed!</span>
+                                    </div>
+                                    <p className="text-sm text-gray-600">
+                                        Success in {questState.attempts} attempts
+                                    </p>
+                                </div>
+                            )}
+
+                            {questState.status === 'failed' && (
+                                <div className="text-center py-2">
+                                    <div className="flex items-center justify-center space-x-2 text-red-600 mb-2">
+                                        <XCircle className="w-5 h-5" />
+                                        <span className="font-semibold">Quest Failed</span>
+                                    </div>
+                                    <p className="text-sm text-gray-600">
+                                        Better luck next time!
+                                    </p>
+                                </div>
+                            )}
+
+                            {questState.status !== 'active' && (
+                                <Button
+                                    onClick={resetQuest}
+                                    variant="outline"
+                                    size="sm"
+                                    className="w-full mt-3"
+                                >
+                                    <RotateCcw className="w-4 h-4 mr-2" />
+                                    Start New Quest
+                                </Button>
+                            )}
+                        </div>
+                    </CardContent>
+                </Card>
             )}
 
             {/* Quest Selector */}
@@ -280,26 +385,32 @@ const QuestComponent: React.FC<Props> = ({
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild>
                         <Button
-                            className="w-full bg-indigo-700 text-white"
+                            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                             onClick={() => {
                                 setError("");
                                 setSelectedQuest(null);
                             }}
                         >
-                            {questState ? 'Start New Quest' : 'Start Quest'}
+                            <Play className="w-5 h-5 mr-2" />
+                            {questState ? 'Start New Quest' : 'Begin Quest'}
                         </Button>
                     </DialogTrigger>
-                    <DialogContent>
+
+                    <DialogContent className="w-full max-w-md mx-auto">
                         <DialogHeader>
-                            <DialogTitle>Choose a Quest</DialogTitle>
+                            <DialogTitle className="flex items-center space-x-2">
+                                <Zap className="w-5 h-5 text-indigo-600" />
+                                <span>Choose Your Quest</span>
+                            </DialogTitle>
                             <DialogDescription>
-                                Select a quest to try with {currentAgent.name}
+                                Select a quest to try with <span className="font-semibold">{currentAgent.name}</span>
                             </DialogDescription>
                         </DialogHeader>
 
                         {error && (
-                            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                                {error}
+                            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center space-x-2">
+                                <XCircle className="w-4 h-4" />
+                                <span>{error}</span>
                             </div>
                         )}
 
@@ -308,41 +419,82 @@ const QuestComponent: React.FC<Props> = ({
                                 const quest = quests.find(q => q.id === value);
                                 setSelectedQuest(quest || null);
                             }}>
-                                <SelectTrigger>
+                                <SelectTrigger className="w-full">
                                     <SelectValue placeholder="Select a quest..." />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {quests.map(quest => (
                                         <SelectItem key={quest.id} value={quest.id}>
-                                            {quest.quest} (Target: {quest.target})
+                                            <div className="flex items-center space-x-2">
+                                                {quest.icon}
+                                                <span>{quest.quest}</span>
+                                            </div>
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
 
                             {selectedQuest && (
-                                <div className="p-3 border rounded-lg bg-gray-50">
-                                    <h4 className="font-semibold">{selectedQuest.quest}</h4>
-                                    <p className="text-sm text-gray-600">
-                                        Target emotion: {selectedQuest.target}<br />
-                                        Attempts allowed: {selectedQuest.number_of_attempts}
-                                    </p>
-                                </div>
+                                <Card className="border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-purple-50">
+                                    <CardContent className="p-4">
+                                        <div className="space-y-3">
+                                            <div className="flex items-center justify-between">
+                                                <h4 className="font-semibold text-gray-800 flex items-center space-x-2">
+                                                    {selectedQuest.icon}
+                                                    <span>{selectedQuest.quest}</span>
+                                                </h4>
+                                                <Badge className={getBadgeColor(selectedQuest.badge)}>
+                                                    {selectedQuest.badge === 'gold' && <Crown className="w-3 h-3 mr-1" />}
+                                                    {selectedQuest.badge === 'silver' && <Award className="w-3 h-3 mr-1" />}
+                                                    {selectedQuest.badge === 'bronze' && <Trophy className="w-3 h-3 mr-1" />}
+                                                    {selectedQuest.badge?.toUpperCase()}
+                                                </Badge>
+                                            </div>
+
+                                            <div className="grid grid-cols-2 gap-2 text-sm">
+                                                <div className="flex items-center space-x-2">
+                                                    <Target className="w-4 h-4 text-gray-500" />
+                                                    <span className="text-gray-600">Target:</span>
+                                                    <span className="font-medium">{selectedQuest.target}</span>
+                                                </div>
+                                                <div className="flex items-center space-x-2">
+                                                    <Zap className="w-4 h-4 text-gray-500" />
+                                                    <span className="text-gray-600">Attempts:</span>
+                                                    <span className="font-medium">{selectedQuest.number_of_attempts}</span>
+                                                </div>
+                                            </div>
+
+                                            <Badge
+                                                variant="outline"
+                                                className={`${getDifficultyColor(selectedQuest.difficulty)} text-xs`}
+                                            >
+                                                {selectedQuest.difficulty.toUpperCase()} DIFFICULTY
+                                            </Badge>
+                                        </div>
+                                    </CardContent>
+                                </Card>
                             )}
 
                             <Button
-                                className="w-full"
+                                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                                 onClick={startQuest}
                                 disabled={!selectedQuest}
                             >
+                                <Play className="w-5 h-5 mr-2" />
                                 Start Quest
                             </Button>
                         </div>
                     </DialogContent>
                 </Dialog>
             ) : (
-                <div className="text-center py-3">
-                    <p className="text-sm text-gray-600">Quest in progress...</p>
+                <div className="text-center py-1">
+                    <div className="flex items-center justify-center space-x-2 text-indigo-600 mb-2">
+                        <Clock className="w-5 h-5 animate-pulse" />
+                        <span className="font-semibold">Quest in Progress</span>
+                    </div>
+                    {/* <p className="text-sm text-gray-600">
+                        Keep chatting to complete your quest!
+                    </p> */}
                 </div>
             )}
         </div>
@@ -358,12 +510,9 @@ function updateQuestProgress(quest: ActiveQuest, currentEmotion: string): Active
         attempts: quest.attempts + 1
     };
 
-    // Check if current emotion matches target (case insensitive)
     if (currentEmotion && currentEmotion.toLowerCase() === quest.emotionTarget.toLowerCase()) {
         updatedQuest.status = 'success';
-    }
-    // Check if attempts exceeded
-    else if (updatedQuest.attempts >= quest.number_of_attempts) {
+    } else if (updatedQuest.attempts >= quest.number_of_attempts) {
         updatedQuest.status = 'failed';
     }
 
@@ -372,12 +521,11 @@ function updateQuestProgress(quest: ActiveQuest, currentEmotion: string): Active
 
 export default QuestComponent;
 
-
 export const getBadgeColor = (badge: 'gold' | 'silver' | 'bronze') => {
     switch (badge) {
-        case 'gold': return 'bg-yellow-500 text-white';
-        case 'silver': return 'bg-gray-300 text-gray-800';
-        case 'bronze': return 'bg-amber-700 text-white';
+        case 'gold': return 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-white';
+        case 'silver': return 'bg-gradient-to-r from-gray-300 to-gray-500 text-gray-800';
+        case 'bronze': return 'bg-gradient-to-r from-amber-600 to-amber-800 text-white';
         default: return 'bg-gray-500 text-white';
     }
 };
