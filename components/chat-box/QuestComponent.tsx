@@ -249,7 +249,7 @@ const QuestComponent: React.FC<Props> = ({
         <div className=' mb-3 max-w-md mx-auto rounded-lg shadow-sm border'>
             {/* Quest Status Display */}
             {questState && (
-                <div className={`mb-3 p-2 rounded-lg border ${questState.status === 'active' ? 'bg-blue-50 border-blue-200' :
+                <div className={`mb-3 p-2 flex justify-center ${questState.status === 'active' ? 'bg-gray-600 ' :
                     questState.status === 'success' ? 'bg-green-50 border-green-200' :
                         'bg-red-50 border-red-200'
                     }`}>
@@ -340,7 +340,7 @@ const QuestComponent: React.FC<Props> = ({
                     </DialogContent>
                 </Dialog>
             ) : (
-                <div className="text-center">
+                <div className="text-center py-3">
                     <p className="text-sm text-gray-600">Quest in progress...</p>
                 </div>
             )}
