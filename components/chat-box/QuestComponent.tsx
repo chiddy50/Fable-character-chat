@@ -217,7 +217,8 @@ const QuestComponent: React.FC<Props> = ({
 
     const getStatusColor = (status: string) => {
         switch (status) {
-            case 'active': return 'text-blue-600';
+            // case 'active': return 'text-blue-600';
+            case 'active': return '';
             case 'success': return 'text-green-600';
             case 'failed': return 'text-red-600';
             default: return 'text-gray-600';
