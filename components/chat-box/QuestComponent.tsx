@@ -277,9 +277,9 @@ const QuestComponent: React.FC<Props> = ({
 
     const getStatusIcon = (status: string) => {
         switch (status) {
-            case 'active': return <Clock className="w-4 h-4" />;
-            case 'success': return <CheckCircle className="w-4 h-4" />;
-            case 'failed': return <XCircle className="w-4 h-4" />;
+            case 'active': return <Clock className="w-4 h-4 text-black" />;
+            case 'success': return <CheckCircle className="w-4 h-4 text-black" />;
+            case 'failed': return <XCircle className="w-4 h-4 text-black" />;
             default: return null;
         }
     };
@@ -302,7 +302,7 @@ const QuestComponent: React.FC<Props> = ({
                         <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-2">
                                 {getStatusIcon(questState.status)}
-                                <CardTitle className="text-base pb-0 font-semibold">
+                                <CardTitle className="text-base text-black pb-0 font-semibold">
                                     {questState.quest}
                                 </CardTitle>
                             </div>
@@ -323,8 +323,8 @@ const QuestComponent: React.FC<Props> = ({
                             </div>
 
                             {questState.status === 'active' && (
-                                <div className="space-y-2">
-                                    <div className="flex justify-between text-sm">
+                                <div className="space-y-2 text-black">
+                                    <div className="flex justify-between  text-sm">
                                         <span>Progress</span>
                                         <span className="font-medium">
                                             {questState.attempts} / {questState.number_of_attempts}
