@@ -367,9 +367,9 @@ const QuestComponent: React.FC<Props> = ({
                             {questState.status !== 'active' && (
                                 <Button
                                     onClick={resetQuest}
-                                    variant="outline"
+                                    // variant="outline"
                                     size="sm"
-                                    className="w-full mt-3"
+                                    className="w-full mt-3 text-black bg-white"
                                 >
                                     <RotateCcw className="w-4 h-4 mr-2" />
                                     Start New Quest
